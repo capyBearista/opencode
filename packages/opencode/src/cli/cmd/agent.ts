@@ -85,7 +85,7 @@ const AgentCreateCommand = effectCmd({
       // Determine scope/path
       let targetPath: string
       if (cliPath) {
-        targetPath = path.join(cliPath, "agent")
+        targetPath = path.join(cliPath, "agents")
       } else {
         let scope: "global" | "project" = "global"
         if (project.vcs === "git") {
@@ -107,7 +107,7 @@ const AgentCreateCommand = effectCmd({
           if (prompts.isCancel(scopeResult)) throw new UI.CancelledError()
           scope = scopeResult
         }
-        targetPath = path.join(scope === "global" ? Global.Path.config : path.join(ctx.worktree, ".opencode"), "agent")
+        targetPath = path.join(scope === "global" ? Global.Path.config : path.join(ctx.worktree, ".opencode"), "agents")
       }
 
       // Get description
