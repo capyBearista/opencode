@@ -22,6 +22,7 @@ import { Plugin } from "../plugin"
 import { Provider } from "@/provider/provider"
 import { ProviderID, type ModelID } from "../provider/schema"
 import { WebSearchTool } from "./websearch"
+import { CodeSearchTool } from "./codesearch"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import * as Log from "@opencode-ai/core/util/log"
 import { LspTool } from "./lsp"
@@ -106,6 +107,7 @@ export const layer: Layer.Layer<
     const plan = yield* PlanExitTool
     const webfetch = yield* WebFetchTool
     const websearch = yield* WebSearchTool
+    const codesearch = yield* CodeSearchTool
     const shell = yield* ShellTool
     const globtool = yield* GlobTool
     const writetool = yield* WriteTool
@@ -205,6 +207,7 @@ export const layer: Layer.Layer<
           fetch: Tool.init(webfetch),
           todo: Tool.init(todo),
           search: Tool.init(websearch),
+          code: Tool.init(codesearch),
           skill: Tool.init(skilltool),
           patch: Tool.init(patchtool),
           question: Tool.init(question),
@@ -227,6 +230,7 @@ export const layer: Layer.Layer<
             tool.fetch,
             tool.todo,
             tool.search,
+            tool.code,
             tool.skill,
             tool.patch,
             ...(Flag.OPENCODE_EXPERIMENTAL_LSP_TOOL ? [tool.lsp] : []),
@@ -285,6 +289,9 @@ export const layer: Layer.Layer<
       const filtered = (yield* all()).filter((tool) => {
         if (tool.id === WebSearchTool.id) {
           return input.providerID === ProviderID.opencode || Flag.OPENCODE_ENABLE_EXA
+        }
+        if (tool.id === CodeSearchTool.id) {
+          return input.providerID === ProviderID.opencode || Flag.OPENCODE_ENABLE_GREP
         }
 
         const usePatch =

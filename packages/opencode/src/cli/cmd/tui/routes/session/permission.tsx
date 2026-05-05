@@ -351,6 +351,14 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
               }
             }
 
+            if (permission === "codesearch") {
+              const query = typeof data.query === "string" ? data.query : ""
+              return {
+                icon: "◈",
+                title: `Grep Code Search "${query}"`,
+              }
+            }
+
             if (permission === "external_directory") {
               const meta = props.request.metadata ?? {}
               const parent = typeof meta["parentDir"] === "string" ? meta["parentDir"] : undefined

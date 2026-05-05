@@ -763,8 +763,7 @@ function WebFetch(props: ToolProps) {
 function CodeSearch(props: ToolProps) {
   return (
     <InlineTool icon="◇" pending="Searching code..." complete={toolComplete(props.part)} part={props.part}>
-      Exa Code Search "{stringValue(props.input.query) ?? pendingInput(props.part)}"{" "}
-      <Show when={numberValue(props.metadata.results)}>{(results) => <>({results()} results)</>}</Show>
+      Grep Code Search "{stringValue(props.input.query) ?? pendingInput(props.part)}"
     </InlineTool>
   )
 }

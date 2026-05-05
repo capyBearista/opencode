@@ -459,6 +459,49 @@ exports[`tool parameters JSON Schema (wire shape) websearch 1`] = `
 }
 `;
 
+exports[`tool parameters JSON Schema (wire shape) codesearch 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "language": {
+      "description": "Filter by programming language. Examples: ['TypeScript', 'TSX'], ['JavaScript'], ['Python'], ['Java'], ['C#'], ['Markdown'], ['YAML']",
+      "items": {
+        "type": "string",
+      },
+      "type": "array",
+    },
+    "matchCase": {
+      "description": "Whether the search should be case sensitive",
+      "type": "boolean",
+    },
+    "matchWholeWords": {
+      "description": "Whether to match whole words only",
+      "type": "boolean",
+    },
+    "path": {
+      "description": "Filter by file path. Examples: 'src/components/Button.tsx', 'README.md'. Can match partial paths, for example '/route.ts' will find route.ts files at any level.",
+      "type": "string",
+    },
+    "query": {
+      "description": "The literal code pattern to search for (e.g., 'useState(', 'export function'). Use actual code that would appear in files, not keywords or questions.",
+      "type": "string",
+    },
+    "repo": {
+      "description": "Filter by repository. Examples: 'facebook/react', 'microsoft/vscode', 'vercel/ai'. Can match partial names, for example 'vercel/' will find repositories in the vercel org.",
+      "type": "string",
+    },
+    "useRegexp": {
+      "description": "Whether to interpret the query as a regular expression",
+      "type": "boolean",
+    },
+  },
+  "required": [
+    "query",
+  ],
+  "type": "object",
+}
+`;
+
 exports[`tool parameters JSON Schema (wire shape) write 1`] = `
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",

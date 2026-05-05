@@ -21,6 +21,7 @@ import { WebFetchTool } from "../../tool/webfetch"
 import { EditTool } from "../../tool/edit"
 import { WriteTool } from "../../tool/write"
 import { WebSearchTool } from "../../tool/websearch"
+import { CodeSearchTool } from "../../tool/codesearch"
 import { TaskTool } from "../../tool/task"
 import { SkillTool } from "../../tool/skill"
 import { ShellTool } from "../../tool/shell"
@@ -149,6 +150,13 @@ function websearch(info: ToolProps<typeof WebSearchTool>) {
   inline({
     icon: "◈",
     title: `Exa Web Search "${info.input.query}"`,
+  })
+}
+
+function codesearch(info: ToolProps<typeof CodeSearchTool>) {
+  inline({
+    icon: "◈",
+    title: `Grep Code Search "${info.input.query}"`,
   })
 }
 
@@ -421,6 +429,7 @@ export const RunCommand = effectCmd({
             if (part.tool === "webfetch") return webfetch(props<typeof WebFetchTool>(part))
             if (part.tool === "edit") return edit(props<typeof EditTool>(part))
             if (part.tool === "websearch") return websearch(props<typeof WebSearchTool>(part))
+            if (part.tool === "codesearch") return codesearch(props<typeof CodeSearchTool>(part))
             if (part.tool === "task") return task(props<typeof TaskTool>(part))
             if (part.tool === "todowrite") return todo(props<typeof TodoWriteTool>(part))
             if (part.tool === "skill") return skill(props<typeof SkillTool>(part))

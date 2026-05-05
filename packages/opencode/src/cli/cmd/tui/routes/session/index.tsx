@@ -46,6 +46,7 @@ import type { EditTool } from "@/tool/edit"
 import type { ApplyPatchTool } from "@/tool/apply_patch"
 import type { WebFetchTool } from "@/tool/webfetch"
 import type { WebSearchTool } from "@/tool/websearch"
+import type { CodeSearchTool } from "@/tool/codesearch"
 import type { TaskTool } from "@/tool/task"
 import type { QuestionTool } from "@/tool/question"
 import type { SkillTool } from "@/tool/skill"
@@ -1571,6 +1572,9 @@ function ToolPart(props: { last: boolean; part: ToolPart; message: AssistantMess
         <Match when={props.part.tool === "websearch"}>
           <WebSearch {...toolprops} />
         </Match>
+        <Match when={props.part.tool === "codesearch"}>
+          <CodeSearch {...toolprops} />
+        </Match>
         <Match when={props.part.tool === "write"}>
           <Write {...toolprops} />
         </Match>
@@ -1953,6 +1957,20 @@ function WebSearch(props: ToolProps<typeof WebSearchTool>) {
   return (
     <InlineTool icon="◈" pending="Searching web..." complete={props.input.query} part={props.part}>
       Exa Web Search "{props.input.query}" <Show when={metadata.numResults}>({metadata.numResults} results)</Show>
+    </InlineTool>
+  )
+}
+
+function CodeSearch(props: ToolProps<typeof CodeSearchTool>) {
+  return (
+    <InlineTool
+      icon="◈"
+      pending="Searching code..."
+      complete={props.input.query}
+      spinner={props.part.state.status === "running"}
+      part={props.part}
+    >
+      Grep Code Search "{props.input.query}"
     </InlineTool>
   )
 }

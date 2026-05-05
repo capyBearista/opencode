@@ -24,6 +24,7 @@ import { Parameters as Task } from "../../src/tool/task"
 import { Parameters as Todo } from "../../src/tool/todo"
 import { Parameters as WebFetch } from "../../src/tool/webfetch"
 import { Parameters as WebSearch } from "../../src/tool/websearch"
+import { Parameters as CodeSearch } from "../../src/tool/codesearch"
 import { Parameters as Write } from "../../src/tool/write"
 
 const parse = <S extends Schema.Decoder<unknown>>(schema: S, input: unknown): S["Type"] =>
@@ -49,6 +50,7 @@ describe("tool parameters", () => {
     test("todo", () => expect(toJsonSchema(Todo)).toMatchSnapshot())
     test("webfetch", () => expect(toJsonSchema(WebFetch)).toMatchSnapshot())
     test("websearch", () => expect(toJsonSchema(WebSearch)).toMatchSnapshot())
+    test("codesearch", () => expect(toJsonSchema(CodeSearch)).toMatchSnapshot())
     test("write", () => expect(toJsonSchema(Write)).toMatchSnapshot())
   })
 
@@ -229,6 +231,12 @@ describe("tool parameters", () => {
   describe("websearch", () => {
     test("accepts query", () => {
       expect(parse(WebSearch, { query: "opencode" }).query).toBe("opencode")
+    })
+  })
+
+  describe("codesearch", () => {
+    test("accepts query", () => {
+      expect(parse(CodeSearch, { query: "useRegexp(" }).query).toBe("useRegexp(")
     })
   })
 

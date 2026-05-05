@@ -15,7 +15,7 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
     const provider = yield* Provider.Service
     const svc = yield* ProviderAuth.Service
 
-    const list = Effect.fn("ProviderHttpApi.list")(function* () {
+    const listImpl = Effect.fn("ProviderHttpApi.listImpl")(function* () {
       const config = yield* cfg.get()
       const all = yield* ModelsDev.Service.use((s) => s.get())
       const disabled = new Set(config.disabled_providers ?? [])
@@ -34,6 +34,17 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
         default: Provider.defaultModelIDs(providers),
         connected: Object.keys(connected),
       }
+    })
+
+    const list = Effect.fn("ProviderHttpApi.list")(function* () {
+      return yield* listImpl().pipe(
+        Effect.catchCause((cause) =>
+          Effect.gen(function* () {
+            yield* Effect.logWarning("Provider list failed, returning empty", { cause })
+            return { all: [], default: {}, connected: [] }
+          }),
+        ),
+      )
     })
 
     const auth = Effect.fn("ProviderHttpApi.auth")(function* () {
