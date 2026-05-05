@@ -6657,7 +6657,7 @@ export type ExperimentalWorkspaceRemoveResponse =
 
 export type ExperimentalWorkspaceWarpData = {
   body?: {
-    id: string
+    id: string | null
     sessionID: string
   }
   path?: never
