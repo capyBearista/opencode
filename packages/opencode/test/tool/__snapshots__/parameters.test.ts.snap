@@ -464,7 +464,7 @@ exports[`tool parameters JSON Schema (wire shape) codesearch 1`] = `
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "properties": {
     "language": {
-      "description": "Filter by programming language. Examples: ['TypeScript', 'TSX'], ['JavaScript'], ['Python'], ['Java'], ['C#'], ['Markdown'], ['YAML']",
+      "description": "Filter by programming language. REQUIRES TitleCase: ['TypeScript'], ['Python'], ['JavaScript']. Lowercase will not match.",
       "items": {
         "type": "string",
       },
@@ -491,7 +491,7 @@ exports[`tool parameters JSON Schema (wire shape) codesearch 1`] = `
       "type": "string",
     },
     "useRegexp": {
-      "description": "Whether to interpret the query as a regular expression",
+      "description": "REQUIRED for regex patterns. Without it, the query matches literally. Set to true if your query uses metacharacters like . * + ? [ ] ( ) | \\",
       "type": "boolean",
     },
   },

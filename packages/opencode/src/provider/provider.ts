@@ -984,6 +984,10 @@ function cost(c: ModelsDev.Model["cost"]): Model["cost"] {
   return result
 }
 
+function normalizeCost(c: Model["cost"]): Model["cost"] {
+  return { ...c, cache: c.cache ?? { read: 0, write: 0 } }
+}
+
 function fromModelsDevModel(provider: ModelsDev.Provider, model: ModelsDev.Model): Model {
   const base: Model = {
     id: ModelID.make(model.id),
@@ -1363,6 +1367,7 @@ const layer: Layer.Layer<
 
           for (const [modelID, model] of Object.entries(provider.models)) {
             model.api.id = model.api.id ?? model.id ?? modelID
+            model.cost = normalizeCost(model.cost)
             if (
               modelID === "gpt-5-chat-latest" ||
               (providerID === ProviderID.openrouter && modelID === "openai/gpt-5-chat")

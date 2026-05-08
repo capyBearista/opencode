@@ -16,7 +16,8 @@ export const Parameters = Schema.Struct({
     description: "Whether to match whole words only",
   }),
   useRegexp: Schema.optional(Schema.Boolean).annotate({
-    description: "Whether to interpret the query as a regular expression",
+    description:
+      "REQUIRED for regex patterns. Without it, the query matches literally. Set to true if your query uses metacharacters like . * + ? [ ] ( ) | \\",
   }),
   repo: Schema.optional(Schema.String).annotate({
     description:
@@ -28,7 +29,7 @@ export const Parameters = Schema.Struct({
   }),
   language: Schema.optional(Schema.Array(Schema.String)).annotate({
     description:
-      "Filter by programming language. Examples: ['TypeScript', 'TSX'], ['JavaScript'], ['Python'], ['Java'], ['C#'], ['Markdown'], ['YAML']",
+      "Filter by programming language. REQUIRES TitleCase: ['TypeScript'], ['Python'], ['JavaScript']. Lowercase will not match.",
   }),
 })
 
@@ -36,7 +37,6 @@ export const CodeSearchTool = Tool.define(
   "codesearch",
   Effect.gen(function* () {
     const http = yield* HttpClient.HttpClient
-
     return {
       description: DESCRIPTION,
       parameters: Parameters,
@@ -49,7 +49,7 @@ export const CodeSearchTool = Tool.define(
             metadata: params,
           })
 
-          const result = yield* McpGrep.call(http, "searchGitHub", McpGrep.SearchArgs, params, "30 seconds")
+          const result = yield* McpGrep.call(http, "searchGitHub", McpGrep.SearchArgs, params, "45 seconds")
 
           return {
             output:

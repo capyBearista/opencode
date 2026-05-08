@@ -1,21 +1,18 @@
-Find real-world code examples from over a million public GitHub repositories to help answer programming questions.
+Find real-world code by searching for literal substrings in source files. Multiple words match lines containing all of them — no operators, quotes, or booleans needed. For flexible patterns, use regex with useRegexp=true.
 
-**IMPORTANT: This tool searches for literal code patterns (like grep), not keywords. Search for actual code that would appear in files:**
-- ✅ Good: 'useState(', 'import React from', 'async function', '(?s)try {.*await'
-- ❌ Bad: 'react tutorial', 'best practices', 'how to use'
+Translate questions into code-search queries:
+- "How to handle CORS in FastAPI?" → 'CORSMiddleware' with language=['Python']
+- "What does a React fetch pattern look like?" → 'await fetch(' with language=['TypeScript']
+- "Show me Flask error handler patterns" → '@app.errorhandler' with language=['Python']
+- "How do projects import NextAuth?" → 'import.*NextAuth' with language=['TypeScript', 'TSX'] and useRegexp=true
 
-**When to use this tool:**
-- When implementing unfamiliar APIs or libraries and need to see real usage patterns
-- When unsure about correct syntax, parameters, or configuration for a specific library
-- When looking for production-ready examples and best practices for implementation
-- When needing to understand how different libraries or frameworks work together
+Multiple words like "fastapi fetch react" match lines containing all three. Do not wrap terms in quotes, AND, or OR — they become literal characters.
 
-**Perfect for questions like:**
-- "How do developers handle authentication in Next.js apps?" → Search: 'getServerSession' with language=['TypeScript', 'TSX']
-- "What are common React error boundary patterns?" → Search: 'ErrorBoundary' with language=['TSX']
-- "Show me real useEffect cleanup examples" → Search: '(?s)useEffect\(\(\) => \{.*removeEventListener' with useRegexp=true
-- "How do developers handle CORS in Flask applications?" → Search: 'CORS(' with matchCase=true and language=['Python']
+Available parameters: query (required), language (TitleCase array), repo, path, matchCase, matchWholeWords, useRegexp. No other parameters are supported.
 
-Use regular expressions with useRegexp=true for flexible patterns like '(?s)useState\(.*loading' to find useState hooks with loading-related variables. Prefix the pattern with '(?s)' to match across multiple lines.
-
-Filter by language, repository, or file path to narrow results.
+Rules — follow these strictly:
+1. First search: query only, no filters. Add language/repo/path only to narrow after seeing what's available.
+2. grep.app searches for literal substrings. Spaces match lines with ALL words. Quotes and operators become literal characters. Use regex with useRegexp=true for flexible matching: 'fastapi|flask|django' matches any of the three.
+3. Language values use TitleCase: ['TypeScript'], ['Python'], ['JavaScript']. Lowercase will not match.
+4. Never invent repo names. Only filter by repo if you saw that repo in a previous search result.
+5. Stay on the user's question. Don't chase internal constants or implementation details from unrelated repos.

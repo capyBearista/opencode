@@ -1,4 +1,4 @@
-import { Duration, Effect, Schema, Option } from "effect"
+import { Duration, Effect, Schema, Option, Schedule } from "effect"
 import { HttpClient, HttpClientRequest } from "effect/unstable/http"
 
 const URL = "https://mcp.grep.app/"
@@ -14,13 +14,26 @@ const McpResult = Schema.Struct({
   }),
 })
 
-const decode = Schema.decodeUnknownOption(Schema.fromJsonString(McpResult))
+const McpError = Schema.Struct({
+  error: Schema.Struct({
+    code: Schema.Number,
+    message: Schema.String,
+  }),
+})
+
+const decodeResult = Schema.decodeUnknownOption(Schema.fromJsonString(McpResult))
+const decodeError = Schema.decodeUnknownOption(Schema.fromJsonString(McpError))
 
 const parseSse = Effect.fn("McpGrep.parseSse")(function* (body: string) {
   for (const line of body.split("\n")) {
     if (!line.startsWith("data: ")) continue
-    const text = Option.getOrUndefined(decode(line.substring(6)))?.result.content[0]?.text
-    if (text) return text
+    const json = line.substring(6)
+
+    const result = Option.getOrUndefined(decodeResult(json))
+    if (result?.result.content[0]?.text) return result.result.content[0].text
+
+    const err = Option.getOrUndefined(decodeError(json))
+    if (err?.error?.message) return `API error: ${err.error.message}`
   }
   return undefined
 })
@@ -63,11 +76,9 @@ export const call = <F extends Schema.Struct.Fields>(
         params: { name: tool, arguments: value },
       }),
     )
-    const response = yield* HttpClient.filterStatusOk(http)
-      .execute(request)
-      .pipe(
-        Effect.timeoutOrElse({ duration: timeout, orElse: () => Effect.die(new Error(`${tool} request timed out`)) }),
-      )
+    const response = yield* Effect.retry(HttpClient.filterStatusOk(http).execute(request), Schedule.recurs(2)).pipe(
+      Effect.timeoutOrElse({ duration: timeout, orElse: () => Effect.die(new Error(`${tool} request timed out`)) }),
+    )
     const body = yield* response.text
     return yield* parseSse(body)
   })
